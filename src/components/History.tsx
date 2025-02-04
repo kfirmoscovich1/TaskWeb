@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fetchEvents } from "../services/api";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/History.css";
@@ -12,7 +12,7 @@ interface DateInfo {
   month: number | null;
 }
 
-const History: React.FC = () => {
+export default function History() {
   const [events, setEvents] = useState<Event[]>([]);
   const [date, setDate] = useState<DateInfo>({ day: null, month: null });
   const [loading, setLoading] = useState<boolean>(true);
@@ -52,6 +52,4 @@ const History: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default History;
+}

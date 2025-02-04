@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import imgDelete from "../images/delete.png";
 import imgUser from "../images/user.png";
 import imgDate from "../images/date.png";
@@ -7,7 +7,7 @@ interface Task {
   id: string;
   title: string;
   description: string;
-  dueDate: string;
+  dueDate?: string;
   priority: "High" | "Medium" | "Low";
   status: "To Do" | "Done" | "archived";
   assignedTo: string;
@@ -20,7 +20,7 @@ interface TaskItemProps {
   onArchive: (id: string) => void;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, onDelete, onDone, onArchive }) => {
+export default function TaskItem({ task, onDelete, onDone, onArchive }: TaskItemProps) {
   const [showFullDescription, setShowFullDescription] = useState<boolean>(false);
 
   const toggleDescription = () => {
@@ -41,6 +41,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onDelete, onDone, onArchive }
       default:
         return "gray";
     }
+  };
+
+  const formatDate = (dateString?: string): string => {
+    if (!dateString) return "No Date";
+    const dateParts = dateString.split("/").reverse();
+    const formattedDate = new Date(dateParts.join("-"));
+    return formattedDate.toLocaleDateString("en-GB");
   };
 
   return (
@@ -89,7 +96,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onDelete, onDone, onArchive }
 
           <div className="d-flex align-items-center">
             <img src={imgDate} alt="Date" style={{ width: "25px", height: "25px", marginRight: "8px" }} />
-            <span>{task.dueDate}</span>
+            <span>{formatDate(task.dueDate)}</span>
           </div>
 
           {task.status === "archived" ? null : task.status !== "Done" ? (
@@ -112,5 +119,3 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, onDelete, onDone, onArchive }
     </div>
   );
 };
-
-export default TaskItem;

@@ -1,11 +1,10 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import TaskBoard from './components/TaskBoard';
 import CreateTaskForm from './components/CreateTaskForm';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import History from './components/History';
 
-const App: React.FC = () => {
+export default function App() {
   return (
     <Router>
       <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
@@ -34,6 +33,4 @@ const App: React.FC = () => {
       <History />
     </Router>
   );
-};
-
-export default App;
+}

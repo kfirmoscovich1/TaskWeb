@@ -2,29 +2,29 @@ import { useState, useEffect } from "react";
 import { getTasks, deleteTask, updateTask, addTask } from "../services/localStorageService";
 import TaskItem from "./TaskItem.tsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-import TaskControls from "./Controls";
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  priority: "High" | "Medium" | "Low";
-  status: "To Do" | "Done" | "archived";
-}
+import Controls from "./Controls";
+import { Task } from "../types";
 
 export default function TaskBoard() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-  const [alertVisible, setAlertVisible] = useState<boolean>(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [sortType, setSortType] = useState<string>("date");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
-    setTasks(getTasks());
-    setLoading(false);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const fetchedTasks = await getTasks();
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleDeleteTask = (taskId: string) => {
@@ -43,19 +43,12 @@ export default function TaskBoard() {
   };
 
   const handleAddTask = (task: Task) => {
-    addTask(task);
+    const newTask = { ...task, assignedTo: task.assignedTo || "Unassigned" };
+    addTask(newTask);
     setTasks(getTasks());
-    setShowAlert(true);
-    setAlertVisible(true);
-    setTimeout(() => {
-      setAlertVisible(false);
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 500);
-    }, 3000);
   };
-  
-  const filteredTasks = tasks.filter(task =>
+
+  let filteredTasks = tasks.filter(task =>
     filterStatus === "all"
       ? task.status !== "archived"
       : filterStatus === "open"
@@ -65,7 +58,14 @@ export default function TaskBoard() {
       : task.status === filterStatus
   );
 
-  const sortedTasks = [...filteredTasks].sort((a, b) => {
+  filteredTasks = [...filteredTasks].sort((a, b) => {
+    if (filterStatus === "all") {
+      if (a.status === "To Do" && b.status !== "To Do") return -1;
+      if (b.status === "To Do" && a.status !== "To Do") return 1;
+      if (a.status === "Done" && b.status !== "Done") return 1;
+      if (b.status === "Done" && a.status !== "Done") return -1;
+    }
+
     if (sortType === "date") {
       const dateA = new Date(a.dueDate.split("/").reverse().join("-"));
       const dateB = new Date(b.dueDate.split("/").reverse().join("-"));
@@ -76,10 +76,12 @@ export default function TaskBoard() {
     }
   });
 
-  const filteredAndSearchedTasks = sortedTasks.filter(task =>
+  const filteredAndSearchedTasks = filteredTasks.filter(task =>
     task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     task.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const hasActiveTasks = tasks.some(task => task.status === "To Do");
 
   return (
     <div className="container">
@@ -87,48 +89,40 @@ export default function TaskBoard() {
         <h1 className="text-center my-4">Task Board</h1>
 
         {!loading && tasks.some(task => task.status !== "archived") && (
-          <TaskControls
+          <Controls
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             sortType={sortType}
             setSortType={setSortType}
             filterStatus={filterStatus}
             setFilterStatus={setFilterStatus}
+            onAddTask={handleAddTask}
           />
         )}
       </div>
 
       {loading && <p className="alert">Loading...</p>}
 
-      {!loading && filteredAndSearchedTasks.length === 0 && (
+      {!loading && filteredAndSearchedTasks.length === 0 && filterStatus !== "done" && filterStatus !== "archived" && !hasActiveTasks && (
         <div className="alert text-center" role="alert">
           <strong>No tasks found.</strong> Click <em className="text-primary">Create Task</em> above to get started!
         </div>
       )}
 
-      {showAlert && (
-        <div
-          className={`alert alert-success position-fixed bottom-0 start-50 translate-middle-x ${
-            alertVisible ? "fade show" : "fade"
-          }`}
-          style={{ zIndex: 1050, width: "80%", textAlign: "center" }}
-        >
-          <strong>Success!</strong> A new task has been created.
+      {filteredAndSearchedTasks.length > 0 && (
+        <div className="row g-3">
+          {filteredAndSearchedTasks.map((task) => (
+            <div key={task.id} className="col-md-4 col-lg-4">
+              <TaskItem
+                task={{ ...task, assignedTo: task.assignedTo || "Unassigned" }}
+                onDelete={handleDeleteTask}
+                onDone={handleMarkAsDone}
+                onArchive={handleArchiveTask}
+              />
+            </div>
+          ))}
         </div>
       )}
-
-      <div className="row g-3">
-        {filteredAndSearchedTasks.map((task) => (
-          <div key={task.id} className="col-md-4 col-lg-4">
-            <TaskItem
-              task={task}
-              onDelete={handleDeleteTask}
-              onDone={handleMarkAsDone}
-              onArchive={handleArchiveTask}
-            />
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

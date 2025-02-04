@@ -1,142 +1,81 @@
-# TaskWeb List Application
+## כפיר מוסקוביץ | תיעוד פרויקט
 
-This project is a TypeScript-based **TaskWeb List application** designed as part of a software engineering assignment. It showcases advanced TypeScript features, integration with external APIs, and React-based SPA functionality.
+## סקירה כללית של הפרויקט
+פרויקט זה הוא אפליקציה לניהול משימות שנבנתה באמצעות React ו-TypeScript, תוך שימוש ב-Vite לביצועים מהירים. האפליקציה מאפשרת למשתמשים ליצור, לנהל ולסנן משימות בצורה קלה ואינטואיטיבית, תוך שימוש ב-Zustand לניהול נתונים.
 
-## Table of Contents
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Integration](#api-integration)
-- [Project Structure](#project-structure)
-- [Contribution](#contribution)
+## תכונות עיקריות
+- **יצירת משימה**: משתמשים יכולים להוסיף משימות חדשות באמצעות טופס ייעודי.
+- **סינון משימות**: תפריט נפתח שמאפשר לסנן משימות לפי סטטוס המשימה.
+- **לוח משימות**: מציג את כל המשימות בצורה מאורגנת.
+- **מחיקת משימה**: משתמשים יכולים למחוק משימות ישירות מהלוח.
+- **עדכונים בזמן אמת**: האינטגרציה עם Zustand מבטיחה שכל הנתונים מסונכרנים.
 
-## Features
+## רכיבים ומהותם
+### קבצים כלליים
+- **`App.tsx`**: הרכיב הראשי שמחבר את כל שאר הרכיבים ומנהל את הניווט בין הדפים.
+- **`main.tsx`**: נקודת הכניסה הראשית של האפליקציה שבה React מטעין את רכיב ה-`App`.
 
-1. **Task Management**:
-   - Add new tasks with a name and optional description.
-   - Mark tasks as completed or uncompleted with a visual indication (strikethrough).
-   - Delete tasks from the list.
+### רכיבים
+- **`CreateTaskForm.tsx`**
+  - רכיב טופס ליצירת משימות חדשות.
+  - כולל שדות קלט לשם המשימה, תיאור ותאריך יעד.
+  - פונקציות עיקריות:
+    - `handleSubmit` - מטפלת בשליחת הטופס, שומרת את הנתונים בזיכרון הגלובלי.
+    - `handleChange` - מעדכנת את ה-state עם הערכים שהמשתמש מכניס.
+  - **Hooks בשימוש**: `useState` לניהול מצב הטופס.
 
-2. **Task Filtering**:
-   - View all tasks.
-   - Filter tasks to show only completed or uncompleted tasks.
+- **`Controls.tsx`**
+  - רכיב בקרה לסינון ומיון משימות.
+  - מאפשר למשתמשים לסנן משימות לפי קריטריונים שונים.
+  - פונקציות עיקריות:
+    - `handleFilterChange` - משנה את הקריטריון לפיו מסננים את המשימות.
+    - `handleSortChange` - משנה את הסדר שבו מוצגות המשימות.
+  - **Hooks בשימוש**: `useState` לניהול ערכי הסינון והמיון.
 
-3. **Persistent Storage**:
-   - Store tasks using `LocalStorage`, ensuring data is retained across page reloads.
+- **`TaskBoard.tsx`**
+  - מציג את כל המשימות בלוח.
+  - משולב עם Zustand לשליפת נתונים ועדכון המשימות בזמן אמת.
+  - פונקציות עיקריות:
+    - `fetchTasks` - שולפת את כל המשימות ממצב הגלובלי.
+    - `deleteTask` - מוחקת משימה ספציפית.
+    - `markAsDone` - מסמנת משימה כהושלמה.
+    - `archiveTask` - מעבירה משימה לארכיון.
+  - **Hooks בשימוש**: `useEffect` לטעינת נתונים, `useState` לניהול המשימות.
 
-4. **Motivational Quotes**:
-   - Fetch and display a motivational quote above the task list from an external API.
+- **`History.tsx`**
+  - רכיב להצגת היסטוריית משימות ואירועים.
+  - מאפשר למשתמשים לצפות בפעולות שבוצעו בעבר.
+  - פונקציות עיקריות:
+    - `fetchHistory` - שולפת את היסטוריית המשימות מהמצב הגלובלי.
+    - `renderHistoryItem` - מציגה פריט בודד בהיסטוריה בצורה ברורה.
+  - **Hooks בשימוש**: `useEffect` לטעינת נתונים, `useState` לניהול ההיסטוריה.
 
-5. **Responsive Design**:
-   - Simple and user-friendly UI with basic styling.
+## טכנולוגיות בשימוש
+- **React**: לבניית ממשק המשתמש.
+- **TypeScript**: מוסיף טיפוסים ומבנה קוד ברור.
+- **Vite**: כלי פיתוח מהיר ויעיל.
+- **Zustand**: לניהול נתונים גלובלי.
+- **CSS**: לעיצוב הרכיבים.
+- **React Router**: לניווט בין דפים.
 
-## Technologies Used
+## התקנות בפרויקט
+- **bootstrap**: לעיצוב ממשק המשתמש.
+- **vite**: סביבה מהירה לפיתוח.
+- **react**: ספריית React לבניית הממשק.
+- **zustand**: לניהול State פשוט ויעיל.
+- **typescript**: לעבודה עם טיפוסים.
+- **react-router-dom**: לניווט בין דפים באפליקציה.
 
-- **TypeScript**: Ensuring type safety and robust code.
-- **React**: For building the user interface.
-- **Vite**: For a fast development environment.
-- **Tailwind CSS**: For styling.
-- **API Integration**: Using `fetch` or `axios` to interact with external APIs.
-
-## Installation
-
-To get started, follow these steps:
-
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-folder>
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. Open your browser and navigate to:
-   ```
-   http://localhost:3000
-   ```
-
-## Usage
-
-### Adding a Task
-1. Enter a task name in the input field.
-2. Optionally, add a description.
-3. Click the **Add Task** button to add it to the list.
-
-### Managing Tasks
-- Mark tasks as completed by clicking on them.
-- Delete tasks using the delete button.
-
-### Filtering Tasks
-- Use the provided filter buttons (**All**, **Completed**, **Uncompleted**) to filter tasks.
-
-### Motivational Quotes
-- A motivational quote will be displayed at the top of the page, fetched from an external API.
-
-## API Integration
-
-The application integrates with the [Quotable API](http://api.quotable.io/random) to fetch motivational quotes. 
-
-### Example API Response:
-```json
-{
-  "content": "The only limit to our realization of tomorrow is our doubts of today.",
-  "author": "Franklin D. Roosevelt"
-}
-```
-
-### Error Handling:
-- The app handles errors gracefully and provides feedback if the API call fails.
-
-## Project Structure
-
-```
-src/
-|-- components/
-|   |-- TaskList.tsx
-|   |-- TaskItem.tsx
-|   |-- QuoteBox.tsx
-|-- App.tsx
-|-- index.tsx
-|-- styles/
-|   |-- tailwind.css
-```
-
-- **`components/`**: Contains reusable React components like `TaskList` and `QuoteBox`.
-- **`App.tsx`**: Main application component.
-- **`styles/`**: Contains styling files.
-
-## Contribution
-
-If you'd like to contribute:
-
-1. Fork the repository.
-2. Create a new feature branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add feature description"
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a pull request.
-
-## License
-
-This project is for educational purposes and is not licensed for production use.
+## איך להריץ את הפרויקט
+1. להריץ `npm install` כדי להתקין את כל התלויות.
+2. להפעיל את האפליקציה עם `npm run dev`.
+3. לפתוח את `http://localhost:5173` בדפדפן.
 
 ---
 
-Enjoy building and extending this project!
+## תמונות
+![Task Board](./src/images/site_images/taskboard1.png)
+![Task Board](./src/images/site_images/taskboard2.png)
+![Create Task](./src/images/site_images/createTask.png)
+![Controls](./src/images/site_images/controls.png)
+![Task Board sort by Priority](./src/images/site_images/sortByPriority.png)

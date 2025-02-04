@@ -1,7 +1,8 @@
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import imgFilter from "../images/filter.png";
 import imgSort from "../images/sort.png";
+import { Task } from "../types";
 
 interface ControlProps {
   searchQuery: string;
@@ -10,16 +11,17 @@ interface ControlProps {
   setSortType: (type: string) => void;
   filterStatus: string;
   setFilterStatus: (status: string) => void;
+  onAddTask: (task: Task) => void;
 }
 
-const Controls: React.FC<ControlProps> = ({
+export default function Controls({
   searchQuery,
   setSearchQuery,
   sortType,
   setSortType,
   filterStatus,
   setFilterStatus,
-}) => {
+}: ControlProps) {
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value.toLowerCase());
   };
@@ -74,6 +76,4 @@ const Controls: React.FC<ControlProps> = ({
       </Dropdown>
     </div>
   );
-};
-
-export default Controls;
+}

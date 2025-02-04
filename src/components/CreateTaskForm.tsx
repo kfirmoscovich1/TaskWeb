@@ -14,7 +14,7 @@ interface Task {
   status: "To Do" | "Done" | "archived";
 }
 
-const CreateTaskForm: React.FC = () => {
+export default function CreateTaskForm() {
   const [title, setTitle] = useState<string>("");
   const [assignedTo, setAssignedTo] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -126,6 +126,4 @@ const CreateTaskForm: React.FC = () => {
       </form>
     </div>
   );
-};
-
-export default CreateTaskForm;
+}
