@@ -1,24 +1,8 @@
 import { useState } from "react";
+import { TaskItemProps } from '../types';
 import imgDelete from "../images/delete.png";
 import imgUser from "../images/user.png";
 import imgDate from "../images/date.png";
-
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  dueDate?: string;
-  priority: "High" | "Medium" | "Low";
-  status: "To Do" | "Done" | "archived";
-  assignedTo: string;
-}
-
-interface TaskItemProps {
-  task: Task;
-  onDelete: (id: string) => void;
-  onDone: (id: string) => void;
-  onArchive: (id: string) => void;
-}
 
 export default function TaskItem({ task, onDelete, onDone, onArchive }: TaskItemProps) {
   const [showFullDescription, setShowFullDescription] = useState<boolean>(false);

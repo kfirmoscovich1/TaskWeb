@@ -1,16 +1,8 @@
 import { useState, useEffect } from "react";
 import { fetchEvents } from "../services/api";
+import { Event,DateInfo } from '../types';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/History.css";
-
-interface Event {
-  description: string;
-}
-
-interface DateInfo {
-  day: number | null;
-  month: number | null;
-}
 
 export default function History() {
   const [events, setEvents] = useState<Event[]>([]);

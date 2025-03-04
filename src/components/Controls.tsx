@@ -2,17 +2,7 @@ import { ChangeEvent } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import imgFilter from "../images/filter.png";
 import imgSort from "../images/sort.png";
-import { Task } from "../types";
-
-interface ControlProps {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  sortType: string;
-  setSortType: (type: string) => void;
-  filterStatus: string;
-  setFilterStatus: (status: string) => void;
-  onAddTask: (task: Task) => void;
-}
+import { ControlProps } from "../types";
 
 export default function Controls({
   searchQuery,

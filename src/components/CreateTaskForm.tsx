@@ -1,18 +1,9 @@
 import React, { useState } from 'react';
+import {Task} from '../types';
 import { useNavigate } from 'react-router-dom';
 import { addTask } from '../services/localStorageService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
-
-interface Task {
-  id: string;
-  title: string;
-  assignedTo: string;
-  description: string;
-  dueDate: string;
-  priority: "High" | "Medium" | "Low";
-  status: "To Do" | "Done" | "archived";
-}
 
 export default function CreateTaskForm() {
   const [title, setTitle] = useState<string>("");
