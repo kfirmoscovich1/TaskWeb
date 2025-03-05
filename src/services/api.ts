@@ -1,12 +1,4 @@
-export interface Event {
-    description: string;
-    year: string;
-}
-
-export interface EventsResponse {
-    events: Event[];
-    date: { day: number; month: number };
-}
+import { EventsResponse } from "../types";
 
 export const fetchEvents = async (): Promise<EventsResponse> => {
     const today = new Date();

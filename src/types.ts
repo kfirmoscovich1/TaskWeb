@@ -24,12 +24,17 @@ export interface Task {
 
   export interface Event {
     description: string;
-  }
+}
   
   export interface DateInfo {
     day: number | null;
     month: number | null;
   }
+
+  export interface EventsResponse {
+    events: Event[];
+    date: { day: number; month: number };
+}
 
   export interface TaskItemProps {
     task: Task;
